@@ -18,17 +18,17 @@ html {
 
 nav {
   display: flex;
-  margin-bottom: 1rem;  /* Space between nav and content below */
-  padding: 0.5em;       /* Some padding inside the nav */
+  margin-bottom: 1rem;  
+  padding: 0.5em;       
   border-bottom: 1px solid oklch(80% 3% 200);
 }
 
 nav a {
-  flex: 1;                     /* Equal width for each link */
-  padding: 0.5em;              /* Spacing inside each link box */
-  text-align: center;          /* Center the text */
-  text-decoration: none;       /* Remove underlines */
-  color: inherit;              /* Inherit text color from parent */
+  flex: 1;      
+  padding: 0.5em;              
+  text-align: center;          
+  text-decoration: none;     
+  color: inherit;      
   transition: border-bottom 0.2s ease, padding-bottom 0.2s ease;
   border-bottom: 0.1em solid transparent;
 }
@@ -40,7 +40,7 @@ nav a.current {
 
 nav a:hover {
   border-bottom: 0.4em solid var(--color-accent);
-  padding-bottom: calc(0.5em - 0.3em);  /* Adjust for the border addition */
+  padding-bottom: calc(0.5em - 0.3em);  
 }
 
 form {
@@ -160,7 +160,6 @@ li {
   margin-bottom: 0.5rem;
 }
 
-/* Skills list formatting */
 section:has(h2:contains("Skills")) ul {
   columns: 2;
   gap: 2rem;
@@ -170,7 +169,6 @@ section:has(h2:contains("Skills")) li {
   break-inside: avoid;
 }
 
-/* Contact header */
 body > h1 {
   text-align: center;
   margin: 2rem 0;
@@ -185,7 +183,6 @@ body > p {
   gap: 1.5rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   section:has(h2:contains("Skills")) ul {
     columns: 1;
@@ -201,7 +198,6 @@ body > p {
   }
 }
 
-/* Keyword highlighting */
 strong {
   color: var(--color-accent);
   font-weight: 600;
@@ -216,4 +212,11 @@ a {
 a:hover {
   opacity: 0.8;
   text-decoration: underline;
+}
+
+.centered-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
 }
