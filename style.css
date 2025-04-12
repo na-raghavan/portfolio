@@ -7,4 +7,25 @@ body {
     margin-inline: auto;
     padding: 1rem;
   }
+
+nav {
+  display: flex;
+  gap: 1rem; 
+  background-color: #f5f5f5; 
+  padding: 0.5rem 1rem;
+}
+
+nav a {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+nav a.current {
+  color: white;
+  background-color: #333;
+  border-radius: 0.25rem;
+}
   
