@@ -8,25 +8,37 @@ body {
     padding: 1rem;
   }
 
+:root {
+  --color-accent: oklch(65% 50% 0);
+}
+
+html {
+  accent-color: var(--color-accent);
+}
+
 nav {
   display: flex;
-  gap: 1rem; 
-  background-color: #f5f5f5; 
-  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;  /* Space between nav and content below */
+  padding: 0.5em;       /* Some padding inside the nav */
+  border-bottom: 1px solid oklch(80% 3% 200);
 }
 
 nav a {
-  flex: 1;
-  text-align: center;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-  display: block;
+  flex: 1;                     /* Equal width for each link */
+  padding: 0.5em;              /* Spacing inside each link box */
+  text-align: center;          /* Center the text */
+  text-decoration: none;       /* Remove underlines */
+  color: inherit;              /* Inherit text color from parent */
+  transition: border-bottom 0.2s ease, padding-bottom 0.2s ease;
+  border-bottom: 0.1em solid transparent;
 }
 
 nav a.current {
-  color: white;
-  background-color: #333;
-  border-radius: 0.25rem;
+  border-bottom: 0.4em solid oklch(80% 3% 200);
+  padding-bottom: calc(0.5em - 0.3em);
 }
-  
+
+nav a:hover {
+  border-bottom: 0.4em solid var(--color-accent);
+  padding-bottom: calc(0.5em - 0.3em);  /* Adjust for the border addition */
+}
