@@ -9,7 +9,7 @@ body {
   }
 
 :root {
-  --color-accent: oklch(65% 50% 0);
+  --color-accent: oklch(65% 16.6% 140);
 }
 
 html {
@@ -42,3 +42,40 @@ nav a:hover {
   border-bottom: 0.4em solid var(--color-accent);
   padding-bottom: calc(0.5em - 0.3em);  /* Adjust for the border addition */
 }
+
+form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1em;
+  font: inherit;
+}
+
+form label {
+  display: contents;
+}
+
+form input,
+form textarea {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 0.25em;
+}
+
+form button {
+  padding: 0.75em;
+  border: none;
+  background: var(--color-accent);
+  color: white;
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+form button:hover {
+  background: var(--color-accent);
+}
+
+form button {
+  grid-column: 1 / -1;
+}
+
