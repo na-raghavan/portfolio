@@ -232,3 +232,18 @@ a:hover {
 .color-scheme select {
   font: inherit;
 }
+
+@media (prefers-color-scheme: dark) {
+  h1, h2, h3, h4, h5, h6 {
+    color: white;
+  }
+}
+
+:root[color-scheme="dark"] h1,
+:root[color-scheme="dark"] h2,
+:root[color-scheme="dark"] h3,
+:root[color-scheme="dark"] h4,
+:root[color-scheme="dark"] h5,
+:root[color-scheme="dark"] h6 {
+  color: white;
+}
