@@ -1,3 +1,8 @@
+html {
+  color-scheme: light dark;           
+  accent-color: var(--color-accent);
+}
+
 :root {
   --color-accent: oklch(65% 16.6% 140);
   --heading-color: oklch(35% 10% 250);
@@ -22,10 +27,11 @@ html {
 }
 
 nav {
+  --border-color: oklch(50% 10% 200 / 40%);
   display: flex;
   margin-bottom: 1rem;
   padding: 0.5em;
-  border-bottom: 1px solid oklch(80% 3% 200);
+  border-bottom: 1px solid var(--border-color); /* ← now adaptive */
 }
 nav a {
   flex: 1;
@@ -37,7 +43,7 @@ nav a {
   border-bottom: 0.1em solid transparent;
 }
 nav a.current {
-  border-bottom: 0.4em solid oklch(80% 3% 200);
+  border-bottom: 0.4em solid var(--border-color); /* ← now uses the same adaptive variable */
   padding-bottom: calc(0.5em - 0.3em);
 }
 nav a:hover {

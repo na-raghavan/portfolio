@@ -1,22 +1,15 @@
-// Debug log to confirm script is running
-console.log("Navigation script loaded and running!");
-
-// Helper function for selecting multiple elements
 function $$(selector, context = document) {
   return Array.from(context.querySelectorAll(selector));
 }
 
-// Dynamically determine base path based on environment
 function getBasePath() {
-  const pathSegments = location.pathname.split('/');
-  if (location.hostname.includes('github.io') && pathSegments.length > 1) {
-    return '/' + pathSegments[1] + '/';
+  const segments = location.pathname.split('/');
+  if (location.hostname.includes('github.io') && segments.length > 1) {
+    return '/' + segments[1] + '/';
   }
-  return '/'; // Default for local environment
+  return '/';
 }
-
 const BASE_PATH = getBasePath();
-console.log("Using base path:", BASE_PATH);
 
 // Define pages in your navigation
 let pages = [
@@ -64,9 +57,7 @@ for (let p of pages) {
   nav.append(a);
 }
 
-document.body.insertAdjacentHTML(
-  'afterbegin',
-  `
+document.body.insertAdjacentHTML('afterbegin', `
   <label class="color-scheme">
     Theme:
     <select>
@@ -75,8 +66,8 @@ document.body.insertAdjacentHTML(
       <option value="dark">Dark</option>
     </select>
   </label>
-`
-);
+`);
+
 
 const select = document.querySelector(".color-scheme select");
 
