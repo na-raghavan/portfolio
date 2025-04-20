@@ -220,3 +220,15 @@ a:hover {
   margin-right: auto;
   max-width: 100%;
 }
+
+.color-scheme {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 80%;
+  font-family: inherit;
+}
+
+.color-scheme select {
+  font: inherit;
+}

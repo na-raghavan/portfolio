@@ -7,9 +7,7 @@ function $$(selector, context = document) {
 }
 
 // Dynamically determine base path based on environment
-// This handles both local and GitHub Pages environments
 function getBasePath() {
-  // Extract the repository name from pathname if on GitHub Pages
   const pathSegments = location.pathname.split('/');
   if (location.hostname.includes('github.io') && pathSegments.length > 1) {
     return '/' + pathSegments[1] + '/';
@@ -37,34 +35,63 @@ document.body.prepend(nav);
 for (let p of pages) {
   let url = p.url;
   let title = p.title;
-  
+
   if (!url.startsWith("http")) {
     url = BASE_PATH + url;
   }
-  
+
   let a = document.createElement("a");
   a.href = url;
   a.textContent = title;
-  
+
   // Debug log for path comparison
   console.log(`Comparing - Link: ${a.pathname}, Current: ${location.pathname}`);
-  
-  // More robust current page detection
+
   const currentPath = location.pathname.endsWith('/') ? location.pathname : location.pathname + '/';
   const linkPath = a.pathname.endsWith('/') ? a.pathname : a.pathname + '/';
-  
-  // Check if current path contains or equals link path
-  const isCurrent = a.host === location.host && 
-                   (currentPath === linkPath || 
-                    currentPath.endsWith(linkPath) ||
-                    linkPath.endsWith(currentPath));
-  
+
+  const isCurrent = a.host === location.host &&
+    (currentPath === linkPath ||
+      currentPath.endsWith(linkPath) ||
+      linkPath.endsWith(currentPath));
+
   a.classList.toggle("current", isCurrent);
-  
-  // Set external links to open in new tab
+
   if (a.host !== location.host) {
     a.target = "_blank";
   }
-  
+
   nav.append(a);
 }
+
+document.body.insertAdjacentHTML(
+  'afterbegin',
+  `
+  <label class="color-scheme">
+    Theme:
+    <select>
+      <option value="light dark">Automatic</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </label>
+`
+);
+
+const select = document.querySelector(".color-scheme select");
+
+function setColorScheme(colorScheme) {
+  document.documentElement.style.setProperty("color-scheme", colorScheme);
+}
+
+if ("colorScheme" in localStorage) {
+  const savedScheme = localStorage.colorScheme;
+  setColorScheme(savedScheme);
+  select.value = savedScheme;
+}
+
+select.addEventListener("input", (event) => {
+  const scheme = event.target.value;
+  setColorScheme(scheme);
+  localStorage.colorScheme = scheme;
+});
