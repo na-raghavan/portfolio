@@ -95,3 +95,24 @@ select.addEventListener("input", (event) => {
   setColorScheme(scheme);
   localStorage.colorScheme = scheme;
 });
+
+const form = document.querySelector("form[action^='mailto:']");
+
+form?.addEventListener("submit", (event) => {
+  event.preventDefault(); 
+
+  const data = new FormData(form);
+  const params = [];
+
+  for (let [name, value] of data) {
+    const encoded = encodeURIComponent(value);
+    params.push(`${name}=${encoded}`);
+  }
+
+  const query = params.join("&");
+  const action = form.getAttribute("action");
+  const url = `${action}?${query}`;
+
+  console.log("Opening mailto URL:", url);
+  location.href = url;
+});

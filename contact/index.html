@@ -8,24 +8,21 @@
 </head>
 <body>  
   <h1>Contact</h1>
-  <form action="mailto:naraghavan@ucsd.edu" method="POST" enctype="text/plain">
-    <label>
-      Email:
-      <input type="email" name="email" required />
-    </label>
-    <br><br>
+  
+  <form action="mailto:naraghavan@ucsd.edu" method="GET">
     <label>
       Subject:
       <input name="subject" required />
     </label>
     <br><br>
     <label>
-      Body:
+      Message:
       <textarea name="body" required></textarea>
     </label>
     <br><br>
-    <button>Submit</button>
+    <button type="submit">Send</button>
   </form>
+  
   <script type="module" src="/portfolio/global.js"></script>
 </body>
 </html>
