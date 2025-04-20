@@ -239,6 +239,17 @@ a:hover {
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  body > h1 {
+    color: white;
+  }
+}
+
+:root[color-scheme="dark"] body > h1 {
+  color: white;
+}
+
+
 :root[color-scheme="dark"] h1,
 :root[color-scheme="dark"] h2,
 :root[color-scheme="dark"] h3,
