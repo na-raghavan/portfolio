@@ -1,17 +1,15 @@
-/* 1) Color tokens – default to light‑mode headings */
 :root {
   --color-accent: oklch(65% 16.6% 140);
   --heading-color: oklch(35% 10% 250);
 }
 
-/* 2) Dark‑mode override */
+/* 2) Dark‑mode override 
 @media (prefers-color-scheme: dark) {
   :root {
     --heading-color: white;
   }
-}
+} */
 
-/* 3) Base layout & typography */
 body {
   font: 100%/1.5 system-ui;
   max-width: 150ch;
@@ -19,12 +17,10 @@ body {
   padding: 1rem;
 }
 
-/* 4) Accent colour for controls & links */
 html {
   accent-color: var(--color-accent);
 }
 
-/* 5) Nav styles */
 nav {
   display: flex;
   margin-bottom: 1rem;
@@ -49,7 +45,6 @@ nav a:hover {
   padding-bottom: calc(0.5em - 0.3em);
 }
 
-/* 6) Form elements */
 form {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -74,7 +69,6 @@ form button {
   grid-column: 1 / -1;
 }
 
-/* 7) Projects grid */
 .projects {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
@@ -93,15 +87,13 @@ form button {
   display: block;
 }
 
-/* 8) Headings – one rule for all levels */
 h1 { font-size: 3em; }
 h1, h2, h3, h4, h5, h6 {
-  color: var(--heading-color);
+ /* color: var(--heading-color); */
   line-height: 1.1;
   text-wrap: balance;
 }
 
-/* 9) Sections & articles */
 section {
   margin: 2rem 0;
   padding: 1.5rem;
@@ -136,14 +128,12 @@ article p:first-of-type {
   color: oklch(50% 5% 250);
 }
 
-/* 10) Timestamps */
 time {
   font-style: italic;
   white-space: nowrap;
   margin-left: 1rem;
 }
 
-/* 11) Lists */
 ul {
   padding-left: 1.25rem;
   line-height: 1.6;
@@ -152,7 +142,6 @@ li {
   margin-bottom: 0.5rem;
 }
 
-/* 12) Skills multi‑column */
 section:has(h2:contains("Skills")) ul {
   columns: 2;
   gap: 2rem;
@@ -161,7 +150,6 @@ section:has(h2:contains("Skills")) li {
   break-inside: avoid;
 }
 
-/* 13) Centered header & intro */
 body > h1 {
   text-align: center;
   margin: 2rem 0;
@@ -174,7 +162,6 @@ body > p {
   gap: 1.5rem;
 }
 
-/* 14) Responsive tweaks */
 @media (max-width: 768px) {
   section:has(h2:contains("Skills")) ul {
     columns: 1;
@@ -186,7 +173,6 @@ body > p {
   time { margin-left: 0; }
 }
 
-/* 15) Inline & utility */
 strong {
   color: var(--color-accent);
   font-weight: 600;
