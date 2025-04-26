@@ -7,7 +7,7 @@ async function initProjects() {
     const projectsTitleElem = document.querySelector('.projects-title');
     if (projectsTitleElem) {
       const baseText = projectsTitleElem.textContent.trim();
-      projectsTitleElem.textContent = `${baseText} (${projects.length})`;
+      projectsTitleElem.textContent = `${projects.length} projects`;
     }
 
     const projectsContainer = document.querySelector('.projects');
