@@ -1,67 +1,67 @@
 [
     {
-      "title": "DSC 102 Project 1.",
+      "title": "DSC 102 Project 1",
       "year": "2025",
-      "image": "images/food_processing_comparison.png",
+      "image": "../images/food_processing_comparison.png",
       "description": "Expository visualization on Whole Foods vs other grocery stores in terms of food processing across categories."
     },
     {
-      "title": "Lorem ipsum dolor sit.",
-      "year": "2025",
+      "title": "Binary classification model on cause of power outage",
+      "year": "2024",
       "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
+      "description": "https://na-raghavan.github.io/powerproject/"
+    },
+    {
+        "title": "CoralME Website",
+        "year": "2025",
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Website for UI for CoralME"
+    },
+    {
+        "title": "MMseqs2 Website",
+        "year": "2025",
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Website for UI for MMseqs2"
+    },
+    {
+        "title": "Bowtie 2 Website",
+        "year": "2025",
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Website for UI for Bowtie 2"
+    },
+    {
+        "title": "DSC 148 Final Project",
+        "year": "2025",
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Report documenting the implementation of linear regression, logistic regression, naive bayes, decision tree and random forest models."
+    },
+    {
+        "title": "DSC 190 Final Project",
+        "year": "2025",
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Presentation about potential company that could be a dashboard for researchers who want to know more about the specific composition of animals with specific infectious diseases."
+    },
+    {
+        "title": "Impact of State Government Spending on Healthcare on Quality of Life Index in India ",
+        "year": "2021",
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Built multivariate models to show correlation between healthcare spending and quality of life from regional primary government data sources"
     },
     {
         "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
+        "year": "2023",
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
     },
     {
         "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
+        "year": "2022",
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
     },
     {
         "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
-    },
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
-    },
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
-    },
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
-    },
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
-    },
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
-    },
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "year": "2025",
+        "year": "2023",
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
     }
