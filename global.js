@@ -11,7 +11,6 @@ function getBasePath() {
 }
 const BASE_PATH = getBasePath();
 
-// Define pages in your navigation
 let pages = [
   { url: "", title: "Home" },
   { url: "projects/", title: "Projects" },
@@ -20,11 +19,9 @@ let pages = [
   { url: "https://github.com/na-raghavan/", title: "GitHub" },
 ];
 
-// Create navigation element
 let nav = document.createElement("nav");
 document.body.prepend(nav);
 
-// Create navigation links
 for (let p of pages) {
   let url = p.url;
   let title = p.title;
@@ -37,7 +34,6 @@ for (let p of pages) {
   a.href = url;
   a.textContent = title;
 
-  // Debug log for path comparison
   console.log(`Comparing - Link: ${a.pathname}, Current: ${location.pathname}`);
 
   const currentPath = location.pathname.endsWith('/') ? location.pathname : location.pathname + '/';
@@ -110,7 +106,6 @@ form?.addEventListener("submit", (event) => {
 
 export async function fetchJSON(url) {
   try {
-    // Fetch the JSON file from the given URL
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Failed to fetch projects: ${response.statusText}`);
@@ -123,7 +118,6 @@ export async function fetchJSON(url) {
 }
 
 export function renderProjects(projects, containerElement, headingLevel = 'h2') {
-  // Validate inputs
   if (!Array.isArray(projects)) {
     console.error('renderProjects: first argument must be an array of projects');
     return;
@@ -133,7 +127,6 @@ export function renderProjects(projects, containerElement, headingLevel = 'h2') 
     return;
   }
 
-  // Ensure headingLevel is a valid H1–H6 tag
   const validHeadings = ['h1','h2','h3','h4','h5','h6'];
   if (!validHeadings.includes(headingLevel.toLowerCase())) {
     console.warn(
@@ -142,10 +135,8 @@ export function renderProjects(projects, containerElement, headingLevel = 'h2') 
     headingLevel = 'h2';
   }
 
-  // Clear any existing content
   containerElement.innerHTML = '';
 
-  // If no projects, show placeholder
   if (projects.length === 0) {
     const emptyMsg = document.createElement('p');
     emptyMsg.textContent = 'No projects to display.';
@@ -153,7 +144,6 @@ export function renderProjects(projects, containerElement, headingLevel = 'h2') 
     return;
   }
 
-  // Create and append one <article> per project
   projects.forEach(project => {
     const { title = 'Untitled', image = '', description = '' } = project;
 
@@ -165,4 +155,13 @@ export function renderProjects(projects, containerElement, headingLevel = 'h2') 
     `;
     containerElement.appendChild(article);
   });
+}
+
+export async function fetchGitHubData(username) {
+  try {
+    const data = await fetchJSON(`https://api.github.com/users/${username}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching GitHub data for', username, error);
+  }
 }
