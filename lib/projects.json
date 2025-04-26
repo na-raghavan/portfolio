@@ -61,6 +61,12 @@
     },
     {
         "title": "Lorem ipsum dolor sit.",
+        "year": "2022",
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
+    },
+    {
+        "title": "Lorem ipsum dolor sit.",
         "year": "2023",
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aliquid suscipit maxime! Et facilis itaque reprehenderit consequatur voluptates ad labore fugit fuga assumenda voluptate, voluptatem vitae! Nisi sapiente sunt nemo!"
