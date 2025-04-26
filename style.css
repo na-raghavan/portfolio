@@ -8,12 +8,6 @@ html {
   --heading-color: oklch(35% 10% 250);
 }
 
-/* 2) Dark‑mode override 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --heading-color: white;
-  }
-} */
 
 body {
   font: 100%/1.5 system-ui;
@@ -31,7 +25,7 @@ nav {
   display: flex;
   margin-bottom: 1rem;
   padding: 0.5em;
-  border-bottom: 1px solid var(--border-color); /* ← now adaptive */
+  border-bottom: 1px solid var(--border-color); 
 }
 nav a {
   flex: 1;
@@ -43,7 +37,7 @@ nav a {
   border-bottom: 0.1em solid transparent;
 }
 nav a.current {
-  border-bottom: 0.4em solid var(--border-color); /* ← now uses the same adaptive variable */
+  border-bottom: 0.4em solid var(--border-color); 
   padding-bottom: calc(0.5em - 0.3em);
 }
 nav a:hover {
@@ -95,7 +89,6 @@ form button {
 
 h1 { font-size: 3em; }
 h1, h2, h3, h4, h5, h6 {
- /* color: var(--heading-color); */
   line-height: 1.1;
   text-wrap: balance;
 }
@@ -205,3 +198,25 @@ a:hover {
   font-family: inherit;
 }
 .color-scheme select { font: inherit; }
+
+#profile-stats dl {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem 1rem;       /* space between items */
+  text-align: center;     /* center labels & values */
+  margin: 1rem 0;         /* vertical breathing room */
+}
+
+#profile-stats dt {
+  grid-row: 1;            /* force all labels onto row 1 */
+  font-weight: 600;       /* make labels stand out */
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+#profile-stats dd {
+  grid-row: 2;            /* force all values onto row 2 */
+  margin: 0;              /* remove default dd indent/margin */
+  font-size: 1.1rem;
+  color: var(--accent-color); /* if you have an accent variable */
+}
