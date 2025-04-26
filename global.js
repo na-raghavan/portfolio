@@ -107,3 +107,62 @@ form?.addEventListener("submit", (event) => {
   console.log("Opening mailto URL:", url);
   location.href = url;
 });
+
+export async function fetchJSON(url) {
+  try {
+    // Fetch the JSON file from the given URL
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch projects: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching or parsing JSON data:', error);
+  }
+}
+
+export function renderProjects(projects, containerElement, headingLevel = 'h2') {
+  // Validate inputs
+  if (!Array.isArray(projects)) {
+    console.error('renderProjects: first argument must be an array of projects');
+    return;
+  }
+  if (!(containerElement instanceof HTMLElement)) {
+    console.error('renderProjects: second argument must be a DOM element');
+    return;
+  }
+
+  // Ensure headingLevel is a valid H1–H6 tag
+  const validHeadings = ['h1','h2','h3','h4','h5','h6'];
+  if (!validHeadings.includes(headingLevel.toLowerCase())) {
+    console.warn(
+      `renderProjects: invalid headingLevel "${headingLevel}", falling back to "h2"`
+    );
+    headingLevel = 'h2';
+  }
+
+  // Clear any existing content
+  containerElement.innerHTML = '';
+
+  // If no projects, show placeholder
+  if (projects.length === 0) {
+    const emptyMsg = document.createElement('p');
+    emptyMsg.textContent = 'No projects to display.';
+    containerElement.appendChild(emptyMsg);
+    return;
+  }
+
+  // Create and append one <article> per project
+  projects.forEach(project => {
+    const { title = 'Untitled', image = '', description = '' } = project;
+
+    const article = document.createElement('article');
+    article.innerHTML = `
+      <${headingLevel}>${title}</${headingLevel}>
+      <img src="${image}" alt="${title}">
+      <p>${description}</p>
+    `;
+    containerElement.appendChild(article);
+  });
+}
