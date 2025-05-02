@@ -4,18 +4,16 @@ import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
 let projects = [];
 let projectsContainer;
 let searchInput;
+let selectedIndex = -1; 
 
 async function initProjects() {
   try {
-    // Fetch and render projects list
     projects = await fetchJSON('../lib/projects.json');
     projectsContainer = document.querySelector('.projects');
 
-    // Update title count
     const titleEl = document.querySelector('.projects-title');
     titleEl.textContent = `${projects.length} projects`;
 
-    // Initial render
     renderProjects(projects, projectsContainer, 'h2');
     setupSearch();
     renderPieChart(projects);
@@ -26,11 +24,9 @@ async function initProjects() {
 
 function setupSearch() {
   searchInput = document.querySelector('.searchBar');
-  let query = '';
 
-  // On user input (real-time)
   searchInput.addEventListener('input', event => {
-    query = event.target.value;
+    const query = event.target.value;
     const filtered = filterProjects(query);
     renderProjects(filtered, projectsContainer, 'h2');
     renderPieChart(filtered);
@@ -46,7 +42,6 @@ function filterProjects(query) {
 }
 
 function renderPieChart(dataProjects) {
-  // 1. Prepare data: count projects per year
   const rolled = d3.rollups(
     dataProjects,
     v => v.length,
@@ -58,43 +53,54 @@ function renderPieChart(dataProjects) {
   const legendEl = d3.select('.legend');
   const radius = 50;
 
-  // Clear old chart
   svg.selectAll('path').remove();
   legendEl.selectAll('li').remove();
 
-  if (data.length === 0) {
-    // No data to show
-    return;
-  }
-
-  // 2. Arc and pie generators
+  if (data.length === 0) return; 
   const arcGen = d3.arc().innerRadius(0).outerRadius(radius);
   const pieGen = d3.pie().value(d => d.value);
   const arcs = pieGen(data);
 
-  // 3. Color scale
   const color = d3.scaleOrdinal(d3.schemeTableau10);
 
-  // 4. Draw slices
   svg
     .selectAll('path')
     .data(arcs)
     .enter()
     .append('path')
     .attr('d', arcGen)
-    .attr('fill', (d, i) => color(i));
+    .attr('fill', (d, i) => color(i))
+    .attr('class', (_, i) => i === selectedIndex ? 'selected' : '')
+    .on('click', (event, d, i) => {
+      selectedIndex = selectedIndex === i ? -1 : i;
 
-  // 5. Draw legend
+      svg.selectAll('path')
+        .attr('class', (_, idx) => idx === selectedIndex ? 'selected' : '');
+      legendEl.selectAll('li')
+        .attr('class', (_, idx) => idx === selectedIndex ? 'selected' : '');
+
+      if (selectedIndex === -1) {
+        renderProjects(projects, projectsContainer, 'h2');
+      } else {
+        const year = data[selectedIndex].label;
+        const filtered = projects.filter(p => p.year === year);
+        renderProjects(filtered, projectsContainer, 'h2');
+      }
+    });
+
   legendEl
     .selectAll('li')
     .data(data)
     .enter()
     .append('li')
     .attr('style', (d, i) => `--color:${color(i)}`)
-    .html(d => `<span class="swatch"></span> ${d.label} <em>(${d.value})</em>`);
+    .attr('class', (_, i) => i === selectedIndex ? 'selected' : '')
+    .html(d => `<span class="swatch"></span> ${d.label} <em>(${d.value})</em>`)
+    .on('click', (event, d, i) => {
+      svg.selectAll('path').filter((_, idx) => idx === i).dispatch('click');
+    });
 }
 
-// Initialize on load or DOM ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initProjects);
 } else {

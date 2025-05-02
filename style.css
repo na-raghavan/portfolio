@@ -233,6 +233,22 @@ a:hover {
   gap: 2em;
 }
 
+.chart-container svg:has(path:hover) path:not(:hover) {
+  opacity: 0.5;
+}
+
+#projects-pie-plot path {
+  transition: 300ms;
+  cursor: pointer;
+}
+
+.selected {
+  --color: oklch(60% 45% 0) !important;
+}
+#projects-pie-plot path.selected {
+  fill: var(--color) !important;
+}
+
 .legend {
   list-style: none;
   padding: 0;
@@ -250,6 +266,7 @@ a:hover {
   padding: 0.25em;
   border: 1px solid #ccc;
   border-radius: 0.25em;
+  cursor: pointer;
 }
 
 .legend .swatch {
@@ -258,6 +275,10 @@ a:hover {
   background: var(--color);
   display: inline-block;
   border-radius: 0.25em;
+  transition: 300ms;
+}
+.legend li.selected .swatch {
+  background: var(--color) !important;
 }
 
 .searchBar {
