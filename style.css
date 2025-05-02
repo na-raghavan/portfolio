@@ -277,6 +277,13 @@ a:hover {
   border-radius: 0.25em;
   transition: 300ms;
 }
+.legend li.selected {
+  font-weight: bold;
+  /* Outline using the accent color or a specific highlight color */
+  outline: 2px solid var(--color-accent);
+  /* Add a subtle background */
+  background-color: oklch(95% 5% 200 / 0.3);
+}
 .legend li.selected .swatch {
   background: var(--color) !important;
 }
