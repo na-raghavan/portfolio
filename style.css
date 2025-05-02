@@ -259,3 +259,13 @@ a:hover {
   display: inline-block;
   border-radius: 0.25em;
 }
+
+.searchBar {
+  width: 100%;
+  max-width: 90em;
+  padding: 0.5em;
+  margin: 1em 0;
+  font: inherit;
+  border: 1px solid #ccc;
+  border-radius: 0.25em;
+}
