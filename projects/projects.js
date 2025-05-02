@@ -5,7 +5,6 @@ async function initProjects() {
   try {
     const projects = await fetchJSON('../lib/projects.json');
 
-    // Update the projects title count
     const projectsTitleElem = document.querySelector('.projects-title');
     if (projectsTitleElem) {
       projectsTitleElem.textContent = `${projects.length} projects`;
@@ -18,8 +17,16 @@ async function initProjects() {
     }
     renderProjects(projects, projectsContainer, 'h2');
 
-    // After rendering projects, draw the pie chart with sample data
-    drawPieChart([1, 2, 3, 4, 5, 5]);
+    const data = [
+      { value: 1, label: 'apples' },
+      { value: 2, label: 'oranges' },
+      { value: 3, label: 'mangos' },
+      { value: 4, label: 'pears' },
+      { value: 5, label: 'limes' },
+      { value: 5, label: 'cherries' },
+    ];
+
+    drawPieChart(data);
   } catch (error) {
     console.error('Error loading or rendering projects:', error);
   }
@@ -29,19 +36,15 @@ function drawPieChart(data) {
   const svg = d3.select('#projects-pie-plot');
   const radius = 50;
 
-  // 1. Create an arc generator
   const arcGenerator = d3.arc()
     .innerRadius(0)
     .outerRadius(radius);
 
-  // 2. Create a pie generator to compute start/end angles
-  const pieGenerator = d3.pie();
+  const pieGenerator = d3.pie().value(d => d.value);
   const arcData = pieGenerator(data);
 
-  // 3. Create a color scale
   const color = d3.scaleOrdinal(d3.schemeTableau10);
 
-  // 4. Join data and append paths
   svg
     .selectAll('path')
     .data(arcData)
@@ -49,9 +52,16 @@ function drawPieChart(data) {
     .append('path')
     .attr('d', arcGenerator)
     .attr('fill', (d, i) => color(i));
+
+  const legend = d3.select('.legend');
+  legend.selectAll('li')
+    .data(data)
+    .enter()
+    .append('li')
+    .attr('style', (d, i) => `--color:${color(i)}`)
+    .html(d => `<span class="swatch"></span> ${d.label} <em>(${d.value})</em>`);
 }
 
-// Initialize on DOM ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initProjects);
 } else {
