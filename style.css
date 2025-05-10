@@ -344,3 +344,16 @@ a:hover {
   font-size: 1.8rem;
   margin: 0;
 }
+.gridlines line {
+  stroke: var(--heading-color);
+  stroke-opacity: 0.15;
+  shape-rendering: crispEdges;
+}
+.gridlines path {
+  display: none;
+}
+
+.dots circle {
+  fill: var(--color-accent);
+  opacity: 0.8;
+}

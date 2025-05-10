@@ -118,12 +118,73 @@ function renderStats(stats) {
   rows.append('td').text(d => d.label);
   rows.append('td').text(d => d.value);
 }
+function renderScatterPlot(data, commits) {
+    const width  = 1000;
+    const height = 600;
+    const margin = { top: 10, right: 10, bottom: 30, left: 40 };
+    const usable = {
+      left:   margin.left,
+      right:  width - margin.right,
+      top:    margin.top,
+      bottom: height - margin.bottom,
+      width:  width - margin.left - margin.right,
+      height: height - margin.top  - margin.bottom
+    };
+  
+    const svg = d3.select('#chart')
+      .append('svg')
+        .attr('viewBox', `0 0 ${width} ${height}`)
+        .style('overflow', 'visible');
+  
+    // Scales
+    const xScale = d3.scaleTime()
+      .domain(d3.extent(commits, d => d.datetime))
+      .range([usable.left, usable.right])
+      .nice();
+  
+    const yScale = d3.scaleLinear()
+      .domain([0, 24])
+      .range([usable.bottom, usable.top]);
+  
+    // Gridlines (horizontal)
+    svg.append('g')
+      .attr('class', 'gridlines')
+      .attr('transform', `translate(${usable.left},0)`)
+      .call(
+        d3.axisLeft(yScale)
+          .tickSize(-usable.width)
+          .tickFormat('')
+      );
+  
+    // X axis
+    svg.append('g')
+      .attr('transform', `translate(0,${usable.bottom})`)
+      .call(d3.axisBottom(xScale));
+  
+    // Y axis with time labels
+    svg.append('g')
+      .attr('transform', `translate(${usable.left},0)`)
+      .call(
+        d3.axisLeft(yScale)
+          .tickFormat(d => String(d % 24).padStart(2, '0') + ':00')
+      );
+  
+    // Dots
+    svg.append('g')
+      .attr('class', 'dots')
+      .selectAll('circle')
+      .data(commits)
+      .join('circle')
+        .attr('cx', d => xScale(d.datetime))
+        .attr('cy', d => yScale(d.hourFrac))
+        .attr('r', 4);}
 
 (async function() {
   const data = await loadData();
   const commits = processCommits(data);
   const stats  = computeStats(data, commits);
   renderStats(stats);
+  renderScatterPlot(data, commits);
 })();
 
 
