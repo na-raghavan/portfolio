@@ -297,3 +297,50 @@ a:hover {
   border: 1px solid #ccc;
   border-radius: 0.25em;
 }
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font: inherit;
+}
+
+.stats-table th,
+.stats-table td {
+  border: 1px solid oklch(50% 10% 200 / 40%);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+
+.stats-table th {
+  background: var(--heading-color);
+  color: white;
+}
+
+.stats-table tbody tr:nth-child(even) {
+  background: oklch(98% 0.5% 200 / 0.3);
+}
+
+.summary {
+  margin: 2rem 0;
+}
+.summary h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--heading-color);
+}
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 2rem;
+}
+.stats-bar dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--heading-color);
+}
+.stats-bar dd {
+  font-size: 1.8rem;
+  margin: 0;
+}
