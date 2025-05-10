@@ -357,3 +357,57 @@ a:hover {
   fill: var(--color-accent);
   opacity: 0.8;
 }
+
+dl.info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0.75em 1em;
+  background: oklch(98% 0.5% 200 / 0.9);
+  border-radius: 0.5em;
+  box-shadow: 0 4px 8px oklch(0% 0 0 / 0.15);
+  font-size: 0.9rem;
+  line-height: 1.2;
+  transition: opacity 200ms ease, visibility 200ms ease;
+}
+dl.info dt {
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--heading-color);
+}
+dl.info dd {
+  margin: 0;
+  color: inherit;
+}
+.tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+}
+dl.info[hidden]:not(:hover):not(:focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.dots circle {
+  transition: transform 200ms ease, r 200ms ease;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.dots circle:hover {
+  transform: scale(1.5);
+}
+
+.gridlines line {
+  stroke: var(--heading-color);
+  stroke-opacity: 0.15;
+  shape-rendering: crispEdges;
+}
+.gridlines path {
+  display: none;
+}
+.dots circle {
+  fill: var(--color-accent);
+  opacity: 0.8;
+}

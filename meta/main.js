@@ -118,6 +118,26 @@ function renderStats(stats) {
   rows.append('td').text(d => d.label);
   rows.append('td').text(d => d.value);
 }
+function renderTooltipContent(commit) {
+    document.getElementById('commit-link').href        = commit.url;
+    document.getElementById('commit-link').textContent = commit.id;
+    document.getElementById('commit-date').textContent = commit.datetime.toLocaleDateString('en', { dateStyle: 'full' });
+    document.getElementById('commit-time').textContent = commit.datetime.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('commit-author').textContent = commit.author;
+    document.getElementById('commit-lines').textContent  = commit.totalLines;
+  }
+  
+  function updateTooltipVisibility(isVisible) {
+    document.getElementById('commit-tooltip').hidden = !isVisible;
+  }
+  
+  function updateTooltipPosition(event) {
+    const tooltip = document.getElementById('commit-tooltip');
+    // offset a bit so it doesn’t sit directly under the cursor
+    tooltip.style.left = `${event.clientX + 10}px`;
+    tooltip.style.top  = `${event.clientY + 10}px`;
+}
+
 function renderScatterPlot(data, commits) {
     const width  = 1000;
     const height = 600;
@@ -171,13 +191,23 @@ function renderScatterPlot(data, commits) {
   
     // Dots
     svg.append('g')
-      .attr('class', 'dots')
-      .selectAll('circle')
-      .data(commits)
-      .join('circle')
-        .attr('cx', d => xScale(d.datetime))
-        .attr('cy', d => yScale(d.hourFrac))
-        .attr('r', 4);}
+    .attr('class', 'dots')
+    .selectAll('circle')
+    .data(commits)
+    .join('circle')
+      .attr('cx', d => xScale(d.datetime))
+      .attr('cy', d => yScale(d.hourFrac))
+      .attr('r', 4)
+      // add these handlers:
+      .on('mouseenter', (event, commit) => {
+        renderTooltipContent(commit);
+        updateTooltipPosition(event);
+        updateTooltipVisibility(true);
+      })
+      .on('mouseleave', () => {
+        updateTooltipVisibility(false);
+      });
+}
 
 (async function() {
   const data = await loadData();
