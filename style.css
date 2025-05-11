@@ -279,9 +279,7 @@ a:hover {
 }
 .legend li.selected {
   font-weight: bold;
-  /* Outline using the accent color or a specific highlight color */
   outline: 2px solid var(--color-accent);
-  /* Add a subtle background */
   background-color: oklch(95% 5% 200 / 0.3);
 }
 .legend li.selected .swatch {
@@ -410,4 +408,39 @@ dl.info[hidden]:not(:hover):not(:focus-within) {
 .dots circle {
   fill: var(--color-accent);
   opacity: 0.8;
+}
+
+@keyframes marching-ants {
+  to {
+    stroke-dashoffset: -8; /* 5 + 3 */
+  }
+}
+
+.selection {
+  fill-opacity: 0.1;
+  stroke: black;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 5 3;
+  animation: marching-ants 2s linear infinite;
+}
+
+
+circle.selected {
+  fill: #ff6b6b; /* Example color, you can change this */
+}
+
+dl.stats {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5em 1em;
+}
+
+dl.stats dt {
+    font-weight: 600;
+    color: var(--heading-color); /* Use your existing heading color variable */
+}
+
+dl.stats dd {
+    margin: 0; /* Remove default margin */
 }
