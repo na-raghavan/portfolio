@@ -151,12 +151,18 @@ function renderScatterPlot(data, commits) {
       height: height - margin.top  - margin.bottom
     };
   
+    const sorted = commits.slice().sort((a, b) => d3.descending(a.totalLines, b.totalLines));
+  
+    const [minLines, maxLines] = d3.extent(commits, d => d.totalLines);
+    const rScale = d3.scaleSqrt()               // sqrt scale for proportional area
+      .domain([minLines, maxLines])
+      .range([2, 30]);                           // tweak these min/max radii as you like
+  
     const svg = d3.select('#chart')
       .append('svg')
         .attr('viewBox', `0 0 ${width} ${height}`)
         .style('overflow', 'visible');
   
-    // Scales
     const xScale = d3.scaleTime()
       .domain(d3.extent(commits, d => d.datetime))
       .range([usable.left, usable.right])
@@ -166,7 +172,6 @@ function renderScatterPlot(data, commits) {
       .domain([0, 24])
       .range([usable.bottom, usable.top]);
   
-    // Gridlines (horizontal)
     svg.append('g')
       .attr('class', 'gridlines')
       .attr('transform', `translate(${usable.left},0)`)
@@ -176,38 +181,38 @@ function renderScatterPlot(data, commits) {
           .tickFormat('')
       );
   
-    // X axis
     svg.append('g')
       .attr('transform', `translate(0,${usable.bottom})`)
       .call(d3.axisBottom(xScale));
   
-    // Y axis with time labels
     svg.append('g')
       .attr('transform', `translate(${usable.left},0)`)
       .call(
         d3.axisLeft(yScale)
-          .tickFormat(d => String(d % 24).padStart(2, '0') + ':00')
+          .tickFormat(d => String(d % 24).padStart(2,'0') + ':00')
       );
   
-    // Dots
     svg.append('g')
-    .attr('class', 'dots')
-    .selectAll('circle')
-    .data(commits)
-    .join('circle')
-      .attr('cx', d => xScale(d.datetime))
-      .attr('cy', d => yScale(d.hourFrac))
-      .attr('r', 4)
-      // add these handlers:
-      .on('mouseenter', (event, commit) => {
-        renderTooltipContent(commit);
-        updateTooltipPosition(event);
-        updateTooltipVisibility(true);
-      })
-      .on('mouseleave', () => {
-        updateTooltipVisibility(false);
-      });
-}
+      .attr('class', 'dots')
+      .selectAll('circle')
+      .data(sorted)
+      .join('circle')
+        .attr('cx', d => xScale(d.datetime))
+        .attr('cy', d => yScale(d.hourFrac))
+        .attr('r',  d => rScale(d.totalLines))
+        .style('fill-opacity', 0.7)
+        .on('mouseenter', (event, commit) => {
+          d3.select(event.currentTarget).style('fill-opacity', 1);
+          renderTooltipContent(commit);
+          updateTooltipPosition(event);
+          updateTooltipVisibility(true);
+        })
+        .on('mouseleave', (event) => {
+          d3.select(event.currentTarget).style('fill-opacity', 0.7);
+          updateTooltipVisibility(false);
+        });
+  }
+  
 
 (async function() {
   const data = await loadData();
@@ -216,5 +221,4 @@ function renderScatterPlot(data, commits) {
   renderStats(stats);
   renderScatterPlot(data, commits);
 })();
-
 
