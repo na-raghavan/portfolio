@@ -10,6 +10,19 @@
     <h1>Meta</h1>
     <h2>Summary</h2>
     <div id="stats"></div>
+    <div class="filter-container" style="display: flex; align-items: baseline; margin-bottom: 1em;">
+      <label for="commit-progress" style="flex: 1;">
+        Show commits until:
+        <input
+          type="range"
+          id="commit-progress"
+          min="0"
+          max="100"
+          value="100"
+        />
+      </label>
+      <time id="commit-time" style="margin-left: auto; font-weight: bold;"></time>
+    </div>
     <section class="chart-section">
         <h2>Commits by time of day</h2>
         <div id="chart"></div>
