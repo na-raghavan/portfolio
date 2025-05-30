@@ -491,3 +491,36 @@ dl.stats dd {
   opacity: 0.7;
   margin-top: 0.15em;
 }
+#scrolly-1 {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+}
+
+#scrolly-1 > * {
+  flex: 1; /* both children (#scatter-story, #scatter-plot) take 50% width */
+}
+
+/* 2) Left side: just position it normally (so text scrolls away) */
+#scatter-story {
+  position: relative;
+}
+
+/* 3) Right side: make the scatter‐plot “sticky” */
+#scatter-plot {
+  position: sticky;
+  top: 0;         /* stick to top of viewport once you reach it */
+  left: 0;        
+  bottom: auto;   /* not needed but ensures no confusion */
+  height: 50vh;   /* IMPORTANT: sticky only works if height is defined */
+  overflow: visible;
+}
+
+/* 4) Style each “step” so that it’s tall enough to fill the viewport. */
+/*    This is optional but recommended: give each .step some padding-bottom */
+#scatter-story .step {
+  padding: 2rem 1rem;   /* add vertical breathing room */
+  margin-bottom: 4rem;  /* ensure you can clearly scroll to the next step */
+  line-height: 1.5;
+  font-size: 1.1rem;
+}

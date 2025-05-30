@@ -1,5 +1,6 @@
 // meta/main.js
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
+import scrollama from 'https://cdn.jsdelivr.net/npm/scrollama@3.2.0/+esm';
 
 let xScale;
 let yScale;
@@ -16,7 +17,7 @@ async function loadData() {
 }
 
 function processCommits(data) {
-  return d3.groups(data, d => d.commit).map(([id, lines]) => {
+  const commits = d3.groups(data, d => d.commit).map(([id, lines]) => {
     const { author, date, time, timezone, datetime } = lines[0];
     const totalLines = lines.length;
     const hourFrac = datetime.getHours() + datetime.getMinutes() / 60;
@@ -31,6 +32,7 @@ function processCommits(data) {
     });
     return ret;
   });
+  return commits.sort((a, b) => d3.ascending(a.datetime, b.datetime));
 }
 
 function computeStats(data, commits) {
@@ -200,6 +202,9 @@ function renderScatterPlot(data, commits) {
     .domain([0, 24])
     .range([usable.bottom, usable.top]);
 
+  // If we already appended an SVG below #chart, remove it first
+  d3.select('#chart').selectAll('svg').remove();
+
   const svg = d3.select('#chart')
     .append('svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
@@ -258,7 +263,7 @@ function renderScatterPlot(data, commits) {
         }
       });
 
-  // brush
+  // brush (unchanged)
   const brush = d3.brush()
     .extent([[usable.left, usable.top], [usable.right, usable.bottom]])
     .on('start brush end', brushed);
@@ -269,6 +274,7 @@ function renderScatterPlot(data, commits) {
 }
 
 function updateScatterPlot(data, commits) {
+  // Same as before; just update circles & x-axis domain
   const [minLines, maxLines] = d3.extent(commits, d => d.totalLines);
   const rScale = d3.scaleSqrt().domain([minLines, maxLines]).range([2, 30]);
 
@@ -316,14 +322,19 @@ function updateScatterPlot(data, commits) {
     );
 }
 
+// ── STEP 2.4: If you already have a unit‐viz, leave that code as is ─────────────────
+// (We’re focusing here on scrolly; you still need updateFileDisplay if you want file‐dots.)
+
 (async function() {
+  // ── Step 0: load everything ───────────────────────────────────────────────
   const data    = await loadData();
-  const commits = processCommits(data);
+  const commits = processCommits(data);   // sorted chronologically!
   const stats   = computeStats(data, commits);
 
   renderStats(stats);
   renderScatterPlot(data, commits);
 
+  // ── Step 1: slider + filtering setup (unchanged from before) ─────────────
   let commitProgress = 100;
   const timeScale = d3.scaleTime()
     .domain([
@@ -335,44 +346,80 @@ function updateScatterPlot(data, commits) {
   let commitMaxTime   = timeScale.invert(commitProgress);
   let filteredCommits = commits;
 
-  const colors = d3.scaleOrdinal(d3.schemeTableau10);
+  // ── Step 3.2: Generate narrative text (.step) for each commit ──────────────
+  d3.select('#scatter-story')
+    .selectAll('.step')
+    .data(commits)
+    .join('div')
+      .attr('class', 'step')
+      .html((d, i) => `
+        <p>
+          On <strong>${d.datetime.toLocaleString('en', {
+            dateStyle: 'full',
+            timeStyle: 'short'
+          })}</strong>,
+          I made
+          <a href="${d.url}" target="_blank">${
+            i > 0
+              ? 'another glorious commit'
+              : 'my very first commit, and it was glorious'
+          }</a>.
+          I edited <strong>${d.totalLines}</strong> lines across
+          <strong>${
+            d3.rollups(
+              d.lines,
+              (arr) => arr.length,
+              (row) => row.file
+            ).length
+          }</strong> files. Then I looked over all I had made, and I saw that it was very good.
+        </p>
+      `);
+  // (You can adjust HTML inside .html(...) however you like; the key is each .step is tall.)
 
-  function updateFileDisplay(filteredCommits) {
-    const lines = filteredCommits.flatMap(d => d.lines);
-    const files = d3.groups(lines, d => d.file)
-      .map(([name, rows]) => ({ name, rows }))
-      .sort((a, b) => b.rows.length - a.rows.length);
-    const filesContainer = d3.select('#files')
-      .selectAll('div')
-      .data(files, d => d.name)
-      .join(
-        enter => enter.append('div').call(div => {
-          div.append('dt');
-          div.append('dd');
-        }),
-        update => update,
-        exit   => exit.remove()
+  // ── Step 3.3: Initialize Scrollama ─────────────────────────────────────────
+  const scroller = scrollama();
+  scroller
+    .setup({
+      container: '#scrolly-1',
+      step: '#scrolly-1 .step',
+      offset: 0.5    // trigger when the step’s middle hits the viewport midpoint (default 0.5)
+    })
+    .onStepEnter(onStepEnter);   // attach our handler
+
+  // ── Handler: when a new “step” enters view, update the scatter‐plot ────────
+  function onStepEnter(response) {
+    // response.element is the <div class="step"> that just entered
+    const commitDatum = response.element.__data__; 
+    const cutoffDate  = commitDatum.datetime;
+
+    // Filter all commits up to and including this date
+    const subset = commits.filter(d => d.datetime <= cutoffDate);
+
+    // Update the scatter plot to show only subset
+    updateScatterPlot(data, subset);
+
+    // Also update the <time> underneath the slider to reflect this date
+    d3.select('#commit-time')
+      .text(
+        cutoffDate.toLocaleString('en', {
+          dateStyle: 'long',
+          timeStyle: 'short'
+        })
       );
 
-    filesContainer.select('dt')
-      .html(d => {
-        const total = d.rows.length;
-        return `<code>${d.name}</code><br><small>${total} lines</small>`;
-      });
-
-    filesContainer.select('dd')
-      .selectAll('div.loc')
-      .data(d => d.rows, d => d.line + '_' + d.depth) 
-      .join('div')
-        .attr('class', 'loc')
-        .attr('style', d => `--color: ${colors(d.type)}`); 
+    // If you still want the slider thumb to move to match this date, you could:
+    //    const progressValue = timeScale(cutoffDate); 
+    //    d3.select('#commit-progress').property('value', progressValue);
+    //    filteredCommits = subset;
+    //
+    // But that’s optional—Scrollama’s driving the plot, not the slider.
   }
 
-  updateFileDisplay(commits);
-
+  // ── Step 1 continued: hook the slider’s “input” event so you can still drag it manually ──
   function onTimeSliderChange() {
     commitProgress = +d3.select('#commit-progress').property('value');
     commitMaxTime  = timeScale.invert(commitProgress);
+
     d3.select('#commit-time')
       .text(
         commitMaxTime.toLocaleString('en', {
@@ -381,15 +428,23 @@ function updateScatterPlot(data, commits) {
         })
       );
 
+    // filter commits by the slider cutoff
     filteredCommits = commits.filter(d => d.datetime <= commitMaxTime);
 
+    // redraw scatterplot
     updateScatterPlot(data, filteredCommits);
 
-    updateFileDisplay(filteredCommits);
+    // ── Optionally, you could also scroll the narrative to keep in sync:
+    //    const idx = d3.bisector(d => d.datetime).right(commits, commitMaxTime) - 1;
+    //    d3.selectAll('#scatter-story .step').classed('current', (d,i) => i === idx);
+    // But that’s more advanced; you can leave narrative static when slider moves.
   }
 
+  // hook slider input
   d3.select('#commit-progress')
     .on('input', onTimeSliderChange);
 
+  // initial redraw so that time label is correct
   onTimeSliderChange();
 })();
+
