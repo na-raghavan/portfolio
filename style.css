@@ -466,4 +466,28 @@ dl.stats dd {
 }
 
 #files dt { grid-column: 1; }
-#files dd { grid-column: 2; }
+.loc {
+  display: flex;
+  width: 0.5em;
+  aspect-ratio: 1;
+  background: var(--color);     /* ← now reads from the CSS variable we set in JS */
+  border-radius: 50%;
+}
+
+#files dd {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  align-content: start;
+  gap: 0.15em;
+  padding-top: 0.6em;
+  margin-left: 0;
+}
+
+#files dt small {
+  display: block;
+  font-size: 0.8em;
+  opacity: 0.7;
+  margin-top: 0.15em;
+}

@@ -317,16 +317,13 @@ function updateScatterPlot(data, commits) {
 }
 
 (async function() {
-  // ── Step 0: load everything ─────────────────────────────
   const data    = await loadData();
   const commits = processCommits(data);
   const stats   = computeStats(data, commits);
 
-  // ── Step 1: render stats & initial scatterplot ──────────
   renderStats(stats);
   renderScatterPlot(data, commits);
 
-  // ── Step 2: slider + filtering setup ────────────────────
   let commitProgress = 100;
   const timeScale = d3.scaleTime()
     .domain([
@@ -335,44 +332,44 @@ function updateScatterPlot(data, commits) {
     ])
     .range([0, 100]);
 
-  let commitMaxTime = timeScale.invert(commitProgress);
+  let commitMaxTime   = timeScale.invert(commitProgress);
   let filteredCommits = commits;
 
-  // ── NEW FUNCTION: builds the file list under #files ─────
+  const colors = d3.scaleOrdinal(d3.schemeTableau10);
+
   function updateFileDisplay(filteredCommits) {
-    // 1) flatten out all "lines" from every selected commit
     const lines = filteredCommits.flatMap(d => d.lines);
-
-    // 2) group those rows by filename
     const files = d3.groups(lines, d => d.file)
-      .map(([name, lines]) => ({ name, lines }));
-
-    // 3) bind data into <div> wrappers inside <dl id="files">
+      .map(([name, rows]) => ({ name, rows }))
+      .sort((a, b) => b.rows.length - a.rows.length);
     const filesContainer = d3.select('#files')
       .selectAll('div')
       .data(files, d => d.name)
       .join(
         enter => enter.append('div').call(div => {
-          div.append('dt').append('code');
+          div.append('dt');
           div.append('dd');
         }),
         update => update,
         exit   => exit.remove()
       );
 
-    // 4) update filename text
-    filesContainer.select('dt > code')
-      .text(d => d.name);
+    filesContainer.select('dt')
+      .html(d => {
+        const total = d.rows.length;
+        return `<code>${d.name}</code><br><small>${total} lines</small>`;
+      });
 
-    // 5) update line‐count text
     filesContainer.select('dd')
-      .text(d => `${d.lines.length} lines`);
+      .selectAll('div.loc')
+      .data(d => d.rows, d => d.line + '_' + d.depth) 
+      .join('div')
+        .attr('class', 'loc')
+        .attr('style', d => `--color: ${colors(d.type)}`); 
   }
 
-  // ── INITIAL DRAW for files (show everything on page-load) ──
   updateFileDisplay(commits);
 
-  // ── SLIDER CALLBACK ────────────────────────────────────────
   function onTimeSliderChange() {
     commitProgress = +d3.select('#commit-progress').property('value');
     commitMaxTime  = timeScale.invert(commitProgress);
@@ -384,20 +381,15 @@ function updateScatterPlot(data, commits) {
         })
       );
 
-    // filter commits by the selected cutoff
     filteredCommits = commits.filter(d => d.datetime <= commitMaxTime);
 
-    // redraw scatterplot points
     updateScatterPlot(data, filteredCommits);
 
-    // ── NEW: redraw file list under the slider ──
     updateFileDisplay(filteredCommits);
   }
 
-  // hook up the slider’s “input” event
   d3.select('#commit-progress')
     .on('input', onTimeSliderChange);
 
-  // do one initial “onTimeSliderChange” so the <time> label is set correctly
   onTimeSliderChange();
 })();
