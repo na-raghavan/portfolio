@@ -414,7 +414,7 @@ dl.info[hidden]:not(:hover):not(:focus-within) {
 
 @keyframes marching-ants {
   to {
-    stroke-dashoffset: -8; /* 5 + 3 */
+    stroke-dashoffset: -8;
   }
 }
 
@@ -428,7 +428,7 @@ dl.info[hidden]:not(:hover):not(:focus-within) {
 
 
 circle.selected {
-  fill: #ff6b6b; /* Example color, you can change this */
+  fill: #ff6b6b;
 }
 
 dl.stats {
@@ -440,11 +440,11 @@ dl.stats {
 
 dl.stats dt {
     font-weight: 600;
-    color: var(--heading-color); /* Use your existing heading color variable */
+    color: var(--heading-color); 
 }
 
 dl.stats dd {
-    margin: 0; /* Remove default margin */
+    margin: 0;
 }
 
 #commit-progress {
@@ -452,3 +452,18 @@ dl.stats dd {
   max-width: 950px;
   box-sizing: border-box;
 }
+
+#files {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  gap: 0.5em 1em;
+}
+
+#files > div {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+#files dt { grid-column: 1; }
+#files dd { grid-column: 2; }
