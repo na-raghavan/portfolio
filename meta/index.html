@@ -24,12 +24,12 @@
       <time id="commit-time" style="margin-left: auto; font-weight: bold;"></time>
     </div>
     <div id="scrolly-1">
-      <!-- Left column: narrative text will go here -->
+      <!-- left‐column: narrative text -->
       <div id="scatter-story">
-        <!-- .step divs will be inserted here by JS -->
+        <!-- (Scrollama “.step” divs are injected here by your JS) -->
       </div>
 
-      <!-- Right column: the sticky scatter plot + brush UI -->
+      <!-- right‐column: make THIS entire block “sticky” -->
       <div id="scatter-plot">
         <section class="chart-section">
           <h2>Commits by time of day</h2>
@@ -38,11 +38,10 @@
           <dl id="language-breakdown" class="stats"></dl>
         </section>
 
+        <!-- Tooltip for hover -->
         <dl id="commit-tooltip" class="info tooltip" hidden>
           <dt>Commit</dt>
-          <dd>
-            <a href="" id="commit-link" target="_blank"></a>
-          </dd>
+          <dd><a href="" id="commit-link" target="_blank"></a></dd>
           <dt>Date</dt>
           <dd id="commit-date"></dd>
           <dt>Time</dt>
@@ -52,9 +51,11 @@
           <dt>Lines edited</dt>
           <dd id="commit-lines"></dd>
         </dl>
-      </div> <!-- /#scatter-plot -->
+
+        <!-- ── MOVE THE UNIT‐VIZ HERE ── -->
+        <dl id="files"></dl>
+      </div>
     </div>
-    <dl id="files"></dl>
   <script type="module" src="/portfolio/global.js"></script>
   <script type="module" src="main.js"></script>
 </body>

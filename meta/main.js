@@ -322,8 +322,66 @@ function updateScatterPlot(data, commits) {
     );
 }
 
-// ── STEP 2.4: If you already have a unit‐viz, leave that code as is ─────────────────
-// (We’re focusing here on scrolly; you still need updateFileDisplay if you want file‐dots.)
+function updateFileDisplay(commits) {
+  // 1) flatten all "line‐rows" from the visible commits
+  //    (each commit object has a non‐enumerable "lines" property that is an array of row‐objects)
+  const allLines = commits.flatMap(d => d.lines);
+
+  // 2) group by file name: returns an array of [ fileName, arrayOfLineRows ]
+  //    then map into { name, lines, type } where `type` is whatever d.type is
+  let files = d3.groups(allLines, d => d.file)
+    .map(([name, lines]) => {
+      // assume every row in `lines` has the same `type` field
+      // (if your CSV has a "type" column for each line, use lines[0].type)
+      return {
+        name,
+        lines,
+        type: lines[0].type
+      };
+    });
+
+  // 3) sort descending by line count
+  files.sort((a, b) => b.lines.length - a.lines.length);
+
+  // 4) OPTIONAL: if you want each file to have a distinct color by technology:
+  //    create (or reuse) an ordinal scale. You can put this outside as a global.
+  const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
+
+  // 5) bind `files` to <div> children under <dl id="files">
+  const container = d3.select('#files');
+  const fileDivs = container.selectAll('div')
+    .data(files, d => d.name)
+    .join(
+      // ENTER: for each new file name, append a <div> and immediately create <dt> & <dd>
+      enter => enter.append('div').call(div => {
+        div.append('dt').append('code');
+        div.append('dd');
+      }),
+      // UPDATE: do nothing special (D3 will keep existing)
+      update => update,
+      // EXIT: remove any files no longer present
+      exit => exit.remove()
+    );
+
+  // 6) for each <div> representing one file, set the <dt><code>…</code></dt> 
+  //    to show the filename plus a <small> with line‐count:
+  fileDivs.select('dt > code')
+    .html(d => `
+      ${d.name}
+      <small>${d.lines.length} lines</small>
+    `);
+
+  // 7) set a CSS variable on the wrapper (so child .loc can use it for background)
+  fileDivs
+    .attr('style', d => `--color: ${colorScale(d.type)}`);
+
+  // 8) inside each <dd>, bind each individual line‐row to a <div class="loc">
+  fileDivs.select('dd')
+    .selectAll('div')
+    .data(d => d.lines)          // d.lines is the array of line‐objects
+    .join('div')
+      .attr('class', 'loc');
+}
 
 (async function() {
   // ── Step 0: load everything ───────────────────────────────────────────────
@@ -333,6 +391,7 @@ function updateScatterPlot(data, commits) {
 
   renderStats(stats);
   renderScatterPlot(data, commits);
+  updateFileDisplay(commits);
 
   // ── Step 1: slider + filtering setup (unchanged from before) ─────────────
   let commitProgress = 100;
@@ -407,12 +466,8 @@ function updateScatterPlot(data, commits) {
         })
       );
 
-    // If you still want the slider thumb to move to match this date, you could:
-    //    const progressValue = timeScale(cutoffDate); 
-    //    d3.select('#commit-progress').property('value', progressValue);
-    //    filteredCommits = subset;
-    //
-    // But that’s optional—Scrollama’s driving the plot, not the slider.
+    // d) redraw the unit visualization
+    updateFileDisplay(subset);  
   }
 
   // ── Step 1 continued: hook the slider’s “input” event so you can still drag it manually ──
