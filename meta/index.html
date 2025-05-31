@@ -24,12 +24,7 @@
       <time id="commit-time" style="margin-left: auto; font-weight: bold;"></time>
     </div>
     <div id="scrolly-1">
-      <!-- left‐column: narrative text -->
-      <div id="scatter-story">
-        <!-- (Scrollama “.step” divs are injected here by your JS) -->
-      </div>
-
-      <!-- right‐column: make THIS entire block “sticky” -->
+      <div id="scatter-story"></div>
       <div id="scatter-plot">
         <section class="chart-section">
           <h2>Commits by time of day</h2>
@@ -37,8 +32,6 @@
           <p id="selection-count">No commits selected</p>
           <dl id="language-breakdown" class="stats"></dl>
         </section>
-
-        <!-- Tooltip for hover -->
         <dl id="commit-tooltip" class="info tooltip" hidden>
           <dt>Commit</dt>
           <dd><a href="" id="commit-link" target="_blank"></a></dd>
@@ -51,8 +44,6 @@
           <dt>Lines edited</dt>
           <dd id="commit-lines"></dd>
         </dl>
-
-        <!-- ── MOVE THE UNIT‐VIZ HERE ── -->
         <dl id="files"></dl>
       </div>
     </div>

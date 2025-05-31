@@ -202,7 +202,6 @@ function renderScatterPlot(data, commits) {
     .domain([0, 24])
     .range([usable.bottom, usable.top]);
 
-  // If we already appended an SVG below #chart, remove it first
   d3.select('#chart').selectAll('svg').remove();
 
   const svg = d3.select('#chart')
@@ -210,7 +209,6 @@ function renderScatterPlot(data, commits) {
       .attr('viewBox', `0 0 ${width} ${height}`)
       .style('overflow', 'visible');
 
-  // grid
   svg.append('g')
     .attr('class', 'gridlines')
     .attr('transform', `translate(${usable.left},0)`)
@@ -220,13 +218,11 @@ function renderScatterPlot(data, commits) {
         .tickFormat('')
     );
 
-  // X-axis
   svg.append('g')
     .attr('class', 'axis x-axis')
     .attr('transform', `translate(0,${usable.bottom})`)
     .call(d3.axisBottom(xScale));
 
-  // Y-axis
   svg.append('g')
     .attr('class', 'axis y-axis')
     .attr('transform', `translate(${usable.left},0)`)
@@ -235,7 +231,6 @@ function renderScatterPlot(data, commits) {
         .tickFormat(d => String(d % 24).padStart(2,'0') + ':00')
     );
 
-  // dots
   const sorted = commits.slice().sort((a, b) => d3.descending(a.totalLines, b.totalLines));
   svg.append('g')
     .attr('class', 'dots')
@@ -262,8 +257,6 @@ function renderScatterPlot(data, commits) {
           updateTooltipVisibility(false);
         }
       });
-
-  // brush (unchanged)
   const brush = d3.brush()
     .extent([[usable.left, usable.top], [usable.right, usable.bottom]])
     .on('start brush end', brushed);
@@ -274,20 +267,16 @@ function renderScatterPlot(data, commits) {
 }
 
 function updateScatterPlot(data, commits) {
-  // Same as before; just update circles & x-axis domain
   const [minLines, maxLines] = d3.extent(commits, d => d.totalLines);
   const rScale = d3.scaleSqrt().domain([minLines, maxLines]).range([2, 30]);
 
-  // update domain
   xScale.domain(d3.extent(commits, d => d.datetime));
 
-  // redraw x-axis
   const xAxis = d3.axisBottom(xScale);
   const xG = d3.select('#chart').select('svg').select('g.x-axis');
   xG.selectAll('*').remove();
   xG.call(xAxis);
 
-  // update dots
   const sorted = commits.slice().sort((a,b) => d3.descending(a.totalLines, b.totalLines));
   const dotsG = d3.select('#chart').select('svg').select('g.dots');
 
@@ -323,16 +312,10 @@ function updateScatterPlot(data, commits) {
 }
 
 function updateFileDisplay(commits) {
-  // 1) flatten all "line‐rows" from the visible commits
-  //    (each commit object has a non‐enumerable "lines" property that is an array of row‐objects)
   const allLines = commits.flatMap(d => d.lines);
-
-  // 2) group by file name: returns an array of [ fileName, arrayOfLineRows ]
-  //    then map into { name, lines, type } where `type` is whatever d.type is
   let files = d3.groups(allLines, d => d.file)
     .map(([name, lines]) => {
-      // assume every row in `lines` has the same `type` field
-      // (if your CSV has a "type" column for each line, use lines[0].type)
+
       return {
         name,
         lines,
@@ -340,42 +323,33 @@ function updateFileDisplay(commits) {
       };
     });
 
-  // 3) sort descending by line count
   files.sort((a, b) => b.lines.length - a.lines.length);
 
-  // 4) OPTIONAL: if you want each file to have a distinct color by technology:
-  //    create (or reuse) an ordinal scale. You can put this outside as a global.
+
   const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
 
-  // 5) bind `files` to <div> children under <dl id="files">
   const container = d3.select('#files');
   const fileDivs = container.selectAll('div')
     .data(files, d => d.name)
     .join(
-      // ENTER: for each new file name, append a <div> and immediately create <dt> & <dd>
       enter => enter.append('div').call(div => {
         div.append('dt').append('code');
         div.append('dd');
       }),
-      // UPDATE: do nothing special (D3 will keep existing)
       update => update,
-      // EXIT: remove any files no longer present
       exit => exit.remove()
     );
 
-  // 6) for each <div> representing one file, set the <dt><code>…</code></dt> 
-  //    to show the filename plus a <small> with line‐count:
+
   fileDivs.select('dt > code')
     .html(d => `
       ${d.name}
       <small>${d.lines.length} lines</small>
     `);
 
-  // 7) set a CSS variable on the wrapper (so child .loc can use it for background)
   fileDivs
     .attr('style', d => `--color: ${colorScale(d.type)}`);
 
-  // 8) inside each <dd>, bind each individual line‐row to a <div class="loc">
   fileDivs.select('dd')
     .selectAll('div')
     .data(d => d.lines)          // d.lines is the array of line‐objects
@@ -384,7 +358,6 @@ function updateFileDisplay(commits) {
 }
 
 (async function() {
-  // ── Step 0: load everything ───────────────────────────────────────────────
   const data    = await loadData();
   const commits = processCommits(data);   // sorted chronologically!
   const stats   = computeStats(data, commits);
@@ -393,7 +366,6 @@ function updateFileDisplay(commits) {
   renderScatterPlot(data, commits);
   updateFileDisplay(commits);
 
-  // ── Step 1: slider + filtering setup (unchanged from before) ─────────────
   let commitProgress = 100;
   const timeScale = d3.scaleTime()
     .domain([
@@ -405,7 +377,6 @@ function updateFileDisplay(commits) {
   let commitMaxTime   = timeScale.invert(commitProgress);
   let filteredCommits = commits;
 
-  // ── Step 3.2: Generate narrative text (.step) for each commit ──────────────
   d3.select('#scatter-story')
     .selectAll('.step')
     .data(commits)
@@ -433,9 +404,7 @@ function updateFileDisplay(commits) {
           }</strong> files. Then I looked over all I had made, and I saw that it was very good.
         </p>
       `);
-  // (You can adjust HTML inside .html(...) however you like; the key is each .step is tall.)
 
-  // ── Step 3.3: Initialize Scrollama ─────────────────────────────────────────
   const scroller = scrollama();
   scroller
     .setup({
@@ -445,19 +414,14 @@ function updateFileDisplay(commits) {
     })
     .onStepEnter(onStepEnter);   // attach our handler
 
-  // ── Handler: when a new “step” enters view, update the scatter‐plot ────────
   function onStepEnter(response) {
-    // response.element is the <div class="step"> that just entered
     const commitDatum = response.element.__data__; 
     const cutoffDate  = commitDatum.datetime;
 
-    // Filter all commits up to and including this date
     const subset = commits.filter(d => d.datetime <= cutoffDate);
 
-    // Update the scatter plot to show only subset
     updateScatterPlot(data, subset);
 
-    // Also update the <time> underneath the slider to reflect this date
     d3.select('#commit-time')
       .text(
         cutoffDate.toLocaleString('en', {
@@ -466,11 +430,9 @@ function updateFileDisplay(commits) {
         })
       );
 
-    // d) redraw the unit visualization
     updateFileDisplay(subset);  
   }
 
-  // ── Step 1 continued: hook the slider’s “input” event so you can still drag it manually ──
   function onTimeSliderChange() {
     commitProgress = +d3.select('#commit-progress').property('value');
     commitMaxTime  = timeScale.invert(commitProgress);
@@ -483,23 +445,14 @@ function updateFileDisplay(commits) {
         })
       );
 
-    // filter commits by the slider cutoff
     filteredCommits = commits.filter(d => d.datetime <= commitMaxTime);
-
-    // redraw scatterplot
     updateScatterPlot(data, filteredCommits);
 
-    // ── Optionally, you could also scroll the narrative to keep in sync:
-    //    const idx = d3.bisector(d => d.datetime).right(commits, commitMaxTime) - 1;
-    //    d3.selectAll('#scatter-story .step').classed('current', (d,i) => i === idx);
-    // But that’s more advanced; you can leave narrative static when slider moves.
   }
 
-  // hook slider input
   d3.select('#commit-progress')
     .on('input', onTimeSliderChange);
 
-  // initial redraw so that time label is correct
   onTimeSliderChange();
 })();
 

@@ -501,12 +501,10 @@ dl.stats dd {
   flex: 1; /* both children (#scatter-story, #scatter-plot) take 50% width */
 }
 
-/* 2) Left side: just position it normally (so text scrolls away) */
 #scatter-story {
   position: relative;
 }
 
-/* 3) Right side: make the scatter‐plot “sticky” */
 #scatter-plot {
   position: sticky;
   top: 0;         /* stick to top of viewport once you reach it */
@@ -516,8 +514,6 @@ dl.stats dd {
   overflow: visible;
 }
 
-/* 4) Style each “step” so that it’s tall enough to fill the viewport. */
-/*    This is optional but recommended: give each .step some padding-bottom */
 #scatter-story .step {
   padding: 2rem 1rem;   /* add vertical breathing room */
   margin-bottom: 4rem;  /* ensure you can clearly scroll to the next step */
